@@ -11,17 +11,37 @@ class SingleChirp extends Component {
 
     componentDidMount() {
         fetch(`/api/chirps/${this.props.match.params.id}`)
-        .then(res => res.json())
-        .then(data => this.setState({
-            postObject: data
-        }))
+            .then(res => res.json())
+            .then(data => this.setState({
+                postObject: data
+            }))
+    }
+
+    handleDeleteClick(e) {
+        fetch(`/api/chirps/${this.props.match.params.id}`, {
+            method: 'DELETE'
+        })
+            .catch(err => (console.log(`I'm not deleted: ${err}`)))
     }
 
     render() {
         return (
             <Fragment>
-            <h1> Is this Working ? {this.state.postObject.Name}</h1 >
-            <Link to={`/chirp/${this.props.match.params.id}/edit`}>Edit/Delete Chirp</Link>
+                <div className="container">
+                    <div className="card">
+                        <div className="card-header">
+                            Display Chirp Info
+                    </div>
+                        <div className="card-body">
+                            <h1 className="card-title">{this.state.postObject.Name}</h1>
+                            <p className="card-text">{this.state.postObject.Chirp}</p>
+                            <Link to={`/chirp/${this.props.match.params.id}/edit`}>Edit Chirp</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="container">
+                    <button onClick={(e) => { this.handleDeleteClick(e); this.props.history.push('/') }} className="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete Chirp">X</button>
+                </div>
             </Fragment>
         )
     }

@@ -41,22 +41,31 @@ class EditChirp extends Component {
             .catch(err => console.log(`Didn't update it: ${err}`))
     };
 
-    handleDeleteClick(e) {
-        fetch(`/api/chirps/${this.props.match.params.id}`, {
-            method: 'DELETE',
-        })
-        .catch(err => (console.log(`I'm not deleted: ${err}`)))
-    }
+
 
 
     render() {
         return (
             <Fragment>
-                <h1>Edit Your Chirp, {this.state.postObject.Name}:</h1>
-                <input value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
-                <input value={this.state.chirp} onChange={(e) => this.setState({ chirp: e.target.value })} />
-                <button onClick={(e) => { this.handleEditClick(e); this.props.history.push('/') }} className="btn btn-secondary">Save Edit</button>
-                <button onClick={(e) => { this.handleDeleteClick(e); this.props.history.push('/') }} className="btn btn-danger">Delete Chirp</button>
+                <h1 className="container text-center">Edit Your Chirp, {this.state.postObject.Name}:</h1>
+                <form>
+                    <div className="container">
+                        <div className="form-group">
+                            <label className="font-weight-bold" for="formGroupExampleInput"><u>Name</u></label>
+                        </div>
+                        <div>
+                            <input value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
+                        </div>
+                        <br />
+                        <div className="form-group">
+                            <label className="font-weight-bold" for="formGroupExampleInput2"><u>Chirp</u></label>
+                        </div>
+                        <div>
+                            <textarea value={this.state.chirp} onChange={(e) => this.setState({ chirp: e.target.value })} />
+                        </div>
+                    </div>
+                </form>
+                <button onClick={(e) => { this.handleEditClick(e); this.props.history.push('/') }} className="btn btn-primary container">Save Edit</button>
             </Fragment>
         )
     }

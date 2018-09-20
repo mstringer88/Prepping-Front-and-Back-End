@@ -53,16 +53,23 @@ class AllChirps extends Component {
     render() {
         return (
             <Fragment>
+                <div class="jumbotron jumbotron-fluid font-weight-bold text-center">
+                    <div class="container">
+                        <h1 class="display-4">Welcome to Chirper!</h1>
+                    </div>
+                </div>
                 <form>
-                    <div className="form-group">
-                        <label>User Name</label>
-                        <input onChange={(e) => this.handleUserNameChange(e)} value={this.state.userName} className="form-control" placeholder="Name" />
+                    <div className="container">
+                        <div className="form-group">
+                            <label>User Name</label>
+                            <input onChange={(e) => this.handleUserNameChange(e)} value={this.state.userName} className="form-control" placeholder="Name" />
+                        </div>
+                        <div className="form-group">
+                            <label>Chirp Message</label>
+                            <textarea onChange={(e) => this.handleMessageChange(e)} value={this.state.message} className="form-control" rows="3" placeholder="Insert Message"></textarea>
+                        </div>
+                        <button onClick={(e) => this.handleButtonClick(e)} type="submit" className="btn btn-primary">Create Chirp!</button>
                     </div>
-                    <div className="form-group">
-                        <label>Chirp Message</label>
-                        <textarea onChange={(e) => this.handleMessageChange(e)} value={this.state.message} className="form-control" rows="3" placeholder="Insert Message"></textarea>
-                    </div>
-                    <button onClick={(e) => this.handleButtonClick(e)} type="submit" className="btn btn-primary">Create Chirp!</button>
                 </form>
                 {this.state.postArray.map((chirp) => {
                     return <DisplayChirp chirp={chirp} />
