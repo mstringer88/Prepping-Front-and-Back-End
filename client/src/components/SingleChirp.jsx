@@ -21,7 +21,7 @@ class SingleChirp extends Component {
         return (
             <Fragment>
             <h1> Is this Working ? {this.state.postObject.Name}</h1 >
-            <Link to={`/chirps/${this.props.match.params.id}/edit`}>Edit/Delete Chirp</Link>
+            <Link to={`/chirp/${this.props.match.params.id}/edit`}>Edit/Delete Chirp</Link>
             </Fragment>
         )
     }

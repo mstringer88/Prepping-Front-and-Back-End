@@ -9,7 +9,7 @@ const DisplayChirp = (props) => {
                 <div className="card-body text-dark">
                     <h5 className="chirp-title">{props.chirp.Name}</h5>
                     <p className="chirp-text">{props.chirp.Chirp.substring(0, 20)} ...</p>
-                    <Link className="btn btn-primary mx-auto" to={`/chirp/${props.chirp.id}`}>Show Chirp</Link>
+                    <Link className="btn btn-primary mx-auto" to={`/chirp/${props.chirp.id}`}>See Details</Link>
                 </div>
             </div>
        </Fragment>

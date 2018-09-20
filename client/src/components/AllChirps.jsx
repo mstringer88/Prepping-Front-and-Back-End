@@ -20,7 +20,6 @@ class AllChirps extends Component {
             }))
     }
 
-
     handleUserNameChange(e) {
         this.setState({ userName: e.target.value });
     }
@@ -49,18 +48,7 @@ class AllChirps extends Component {
                 postArray: data
             }))
             .catch(err => console.log(`You fucked up: ${err}`))
-
-        // let newPostArray = this.state.postArray;
-
-        // newPostArray.unshift(newChirpPost);
-        // this.setState({
-        //     postArray: newPostArray,
-        //     userName: '',
-        //     message: ''
-        // });
     }
-
-
 
     render() {
         return (
