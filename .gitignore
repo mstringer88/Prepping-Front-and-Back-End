@@ -2,6 +2,5 @@ node_modules
 client/dist
 server/lib
 **/*/ENV_VAR
-ENV_VAR
 **/env/development.js
-development.js
+generatePass.js
