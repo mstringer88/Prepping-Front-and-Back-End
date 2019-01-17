@@ -1,44 +1,35 @@
 import React, { Component, Fragment } from 'react';
+import * as chripServices from '../services/chirps';
 
 class EditChirp extends Component {
     constructor(props) {
         super(props);
         this.state = {
             postObject: {},
-            name: '',
-            chirp: ''
+            title: '',
+            text: ''
         }
     }
 
     componentDidMount() {
-        fetch(`/api/chirps/${this.props.match.params.id}`)
-            .then(res => res.json())
+
+        chripServices.one(this.props.match.params.id)
             .then(data => this.setState({
                 postObject: data,
-                name: data.Name,
-                chirp: data.Chirp
+                title: data.title,
+                text: data.text
             }))
     }
 
     handleEditClick(e) {
         let editChirpPost = {
-            Name: this.state.name,
-            Chirp: this.state.chirp
+            Title: this.state.title,
+            Text: this.state.text
         };
+        chripServices.update(this.props.match.params.id, editChirpPost)
+            .then(response => this.props.history.replace('/allchirps'))
+            .catch(err => console.log(`Didn't work: ${err}`))
 
-        fetch(`/api/chirps/${this.props.match.params.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(editChirpPost),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(data => this.setState({
-                postObject: data
-            }))
-
-            .catch(err => console.log(`Didn't update it: ${err}`))
     };
 
 
@@ -47,25 +38,33 @@ class EditChirp extends Component {
     render() {
         return (
             <Fragment>
-                <h1 className="container text-center">Edit Your Chirp, {this.state.postObject.Name}:</h1>
-                <form>
+                <main className="main py-5 bg-light" role="main" >
                     <div className="container">
-                        <div className="form-group">
-                            <label className="font-weight-bold" for="formGroupExampleInput"><u>Name</u></label>
-                        </div>
-                        <div>
-                            <input value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
-                        </div>
-                        <br />
-                        <div className="form-group">
-                            <label className="font-weight-bold" for="formGroupExampleInput2"><u>Chirp</u></label>
-                        </div>
-                        <div>
-                            <textarea value={this.state.chirp} onChange={(e) => this.setState({ chirp: e.target.value })} />
+                        <div className="row">
+                            <div className="col-md-8 mx-auto">
+                                <div className="text-center">
+                                    <h1 className="container text-center">Edit Your Chirp...</h1>
+                                </div>
+                                    <div className="form-group">
+                                        <label className="font-weight-bold" for="title"><u>Title</u></label>
+                                    </div>
+                                    <div>
+                                        <input value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} type="text" className="form-control form-control-lg" id="title" placeholder="Enter a title" />
+                                    </div>
+                                    <br />
+                                    <div className="form-group">
+                                        <label className="font-weight-bold" for="chirp"><u>Chirp</u></label>
+                                    </div>
+                                    <div>
+                                        <textarea className="editor" value={this.state.text} onChange={(e) => this.setState({ text: e.target.value })} style={{ height: '20em' }} />
+                                    </div>
+                                <div className="container">
+                                    <button onClick={(e) => { this.handleEditClick(e); this.props.history.push('/allchirps') }} className="btn btn-primary container-fluid">Save Edit</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
-                <button onClick={(e) => { this.handleEditClick(e); this.props.history.push('/') }} className="btn btn-primary container">Save Edit</button>
+                </main>
             </Fragment>
         )
     }
