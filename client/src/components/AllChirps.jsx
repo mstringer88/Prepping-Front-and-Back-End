@@ -1,79 +1,79 @@
 import React, { Component, Fragment } from "react";
+import { Link } from 'react-router-dom';
 import DisplayChirp from "./DisplayChirp";
 import fetch from 'isomorphic-fetch';
+import * as chirpServices from '../services/chirps';
+import AuthButton from '../components/auth/authButton';
 
 class AllChirps extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: "",
-            message: "",
-            postArray: [],
+            chirpList1: [],
+            chirpList2: [],
+
         }
     };
 
-    componentDidMount() {
-        fetch('/api/chirps/')
-            .then(res => res.json())
-            .then(data => this.setState({
-                postArray: data
-            }))
+    componentWillMount() {
+
+        chirpServices.all()
+            .then(res => {
+                let chirpList1 = res.splice(0, (res.length / 2));
+                let chirpList2 = res.splice((res.length / 2) - 1, res.length);
+                this.setState({
+                    chirpList1,
+                    chirpList2
+                });
+            }).catch(derp => {
+                console.log(derp);
+            })
     }
 
-    handleUserNameChange(e) {
-        this.setState({ userName: e.target.value });
+    chirpList1() {
+        return this.state.chirpList1.map(chirp => {
+            return <DisplayChirp key={chirp.id} chirp={chirp} />
+        });
     }
 
-    handleMessageChange(e) {
-        this.setState({ message: e.target.value });
+    chirpList2() {
+        return this.state.chirpList2.map(chirp => {
+            return <DisplayChirp key={chirp.id} chirp={chirp} />
+        });
     }
 
-    handleButtonClick(e) {
-        e.preventDefault();
 
-        let newChirpPost = {
-            Name: this.state.userName,
-            Chirp: this.state.message
-        };
-
-        fetch(`/api/chirps/`, {
-            method: 'POST',
-            body: JSON.stringify(newChirpPost),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(data => this.setState({
-                postArray: data
-            }))
-            .catch(err => console.log(`You fucked up: ${err}`))
-    }
 
     render() {
         return (
             <Fragment>
-                <div class="jumbotron jumbotron-fluid font-weight-bold text-center">
-                    <div class="container">
-                        <h1 class="display-4">Welcome to Chirper!</h1>
+                <header>
+                    <div class="jumbotron jumbotron-fluid font-weight-bold text-center">
+                        <div class="container">
+                            <AuthButton />
+                            <h1 class="display-4">Welcome to Chirper!</h1>
+                        </div>
                     </div>
-                </div>
-                <form>
                     <div className="container">
-                        <div className="form-group">
-                            <label>User Name</label>
-                            <input onChange={(e) => this.handleUserNameChange(e)} value={this.state.userName} className="form-control" placeholder="Name" />
-                        </div>
-                        <div className="form-group">
-                            <label>Chirp Message</label>
-                            <textarea onChange={(e) => this.handleMessageChange(e)} value={this.state.message} className="form-control" rows="3" placeholder="Insert Message"></textarea>
-                        </div>
-                        <button onClick={(e) => this.handleButtonClick(e)} type="submit" className="btn btn-primary">Create Chirp!</button>
+                        <Link to="/createchirp" className="btn btn-info text-center">Write New Chirp</Link>
                     </div>
-                </form>
-                {this.state.postArray.map((chirp) => {
-                    return <DisplayChirp chirp={chirp} />
-                })}
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="row">
+                                    <div className="col-md-6">
+
+                                        {this.chirpList1()}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        {this.chirpList2()}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
             </Fragment>
         )
     };
