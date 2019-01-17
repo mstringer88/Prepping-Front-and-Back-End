@@ -1,56 +1,44 @@
 import { Router } from 'express';
-import chirpsStore from '../chirpsstore';
+import Table from '../table';
 
 let router = Router();
 
-router.get('/:id?', (req, res) => {
+let chirps = new Table('chirps');
+
+router.get('/', (req, res) => {
+    chirps.getAll()
+        .then(chirps => {
+            res.json(chirps)
+        });
+});
+
+router.get('/:id', async (req, res) => {
     let id = req.params.id
-    if (id) {
-        res.json(chirpsStore.GetChirp(id))
-    } else {
-        let chirps = chirpsStore.GetChirps();
-        let response = Object.keys(chirps).map(key => { //[0, 1, 2, nextid] map => chirps[key]
-            let id = key;
-            let Chirp = chirps[key].Chirp;
-            let Name = chirps[key].Name;
-            return {
-                id,
-                Name,
-                Chirp
-            }
-        });
-        response.pop();
-        res.send(response);
-    }
+    let chirp = await chirps.getOne(id);
+    // chirp = chirp;
+    return res.json({
+        title: chirp.title,
+        text: chirp.text,
+        location: chirp.location
+    });
+    res.sendStatus(200);
 });
 
-router.post('/', (req, res) => {
-    chirpsStore.CreateChirp(req.body);
-    let chirps = chirpsStore.GetChirps();
-        let response = Object.keys(chirps).map(key => { //[0, 1, 2, nextid] map => chirps[key]
-            let id = key;
-            let Chirp = chirps[key].Chirp;
-            let Name = chirps[key].Name;
-            return {
-                id,
-                Name,
-                Chirp
-            }
-        });
-        response.pop();
-        res.send(response);
+router.post('/', async (req, res) => {
+    let createChirp = await chirps.insert(req.body)
+
+    return res.sendStatus(200)
 });
 
-router.put('/:id', (req, res) => {
-    let id = req.params.id;
-    let editChirp = req.body
-    chirpsStore.UpdateChirp(id, editChirp);
-    res.send(`It has been updated!`);
+router.put('/:id', async (req, res) => {
+    await chirps.update(req.params.id, req.body);
+    res.sendStatus(200)
 });
 
-router.delete('/:id', (req, res) => {
-    chirpsStore.DeleteChirp(req.params.id);
-    res.send(`It has been deleted!`);
+router.delete('/:id', async (req, res) => {
+    let id = req.params.id
+    let chirp = await chirps.delete(id);
+    res.sendStatus(200);
 });
 
 export default router;
